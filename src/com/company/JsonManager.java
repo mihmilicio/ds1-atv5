@@ -6,17 +6,19 @@ import com.google.gson.GsonBuilder;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class ObjetoPedidos {
     final List<Pedido> pedidos;
 
-    ObjetoPedidos (List<Pedido> pedidos) {
+    ObjetoPedidos(List<Pedido> pedidos) {
         this.pedidos = pedidos;
     }
 }
 
 public class JsonManager {
-    public static void salvarPedidos (List<Pedido> pedidos) throws IOException {
+    public static void salvarPedido(Pedido pedido) throws IOException {
         // mantêm os pedidos já registrados
         Gson gson = new Gson();
         File arquivo = new File("./src/com/company/registro_pedidos.json");
@@ -31,7 +33,16 @@ public class JsonManager {
         } else {
             currList = new ArrayList<>();
         }
-        currList.addAll(pedidos);
+
+        if (currList.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(pedido.id)) {
+            int index = IntStream.range(0, currList.size())
+                    .filter(i -> pedido.id == currList.get(i).id)
+                    .findFirst()
+                    .orElse(0);
+            currList.set(index, pedido);
+        } else {
+            currList.add(pedido);
+        }
 
         // cria novo objeto incrementando registros antigos
         Gson gsonB = new GsonBuilder().setPrettyPrinting().create();
@@ -43,10 +54,10 @@ public class JsonManager {
         gravador.close();
     }
 
-    public static List<Pedido> lerPedidos () throws IOException {
+    public static List<Pedido> lerPedidos() throws IOException {
         Gson gson = new Gson();
 
-        File arquivo = new File("./src/com/company/atv4/registro_pedidos.json");
+        File arquivo = new File("./src/com/company/registro_pedidos.json");
 
         List<Pedido> retorno;
         if (arquivo.exists()) {
@@ -60,5 +71,15 @@ public class JsonManager {
         }
 
         return retorno;
+    }
+
+    public static int getNextId() throws IOException {
+        List<Pedido> pedidosExistentes = lerPedidos();
+        int listSize = pedidosExistentes.size();
+        if (listSize > 0) {
+            return pedidosExistentes.get(pedidosExistentes.size() - 1).id + 1;
+        } else {
+            return 1;
+        }
     }
 }

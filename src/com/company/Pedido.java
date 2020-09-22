@@ -10,13 +10,15 @@ import java.util.Locale;
 public class Pedido {
     private static final NumberFormat formatter = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
 
+    int id;
     final List<Produto> itens;
     public String observacao;
     double precoTotal;
 
-    public Pedido() {
+    public Pedido(int id) {
         this.itens = new ArrayList<>();
         this.precoTotal = 0;
+        this.id = id;
     }
 
     public void setItem(Produto prod) {

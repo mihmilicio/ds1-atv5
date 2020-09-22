@@ -15,8 +15,7 @@ public class Main {
     private static final String[] categorias = { "BEBIDA", "VINHO", "PRATO" };
     public static final Scanner input = new Scanner(System.in);
     private static final List<List<Produto>> listCompleta = new ArrayList<>();
-    private static final List<Pedido> listPedidos = new ArrayList<>();
-    private static int currentIndex = 0;
+    private static Pedido pedidoCorrente;
 
     public static final NumberFormat formatter = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
     public static final String emptyPedidoMessage = "Não é possível enviar um pedido vazio... Adicione pelo menos um item!";
@@ -34,9 +33,8 @@ public class Main {
 
         int flowOption;
         do {
-            listPedidos.add(new Pedido());
+            pedidoCorrente = new Pedido(JsonManager.getNextId());
             flowOption = Menus.iniciar(listCompleta);
-            currentIndex++;
         } while (flowOption == 2);
 
     }
@@ -52,12 +50,12 @@ public class Main {
         switch (op) {
             case 4 -> {
                 System.out.println("\nCARRINHO");
-                printPedido(listPedidos.get(currentIndex), "Pedido atual", true);
+                printPedido(pedidoCorrente, "Pedido atual", true);
                 Thread.sleep(1250);
                 retorno = 1;
             }
             case 5 -> {
-                if (!listPedidos.get(currentIndex).isValidPedido()) {
+                if (!pedidoCorrente.isValidPedido()) {
                     System.out.println(emptyPedidoMessage);
                     retorno = 1;
                 } else {
@@ -72,7 +70,7 @@ public class Main {
                 if (listSize > 0) {
                     IntStream.range(0, listSize).forEach(index -> {
                         Pedido pedido = pedidosRegistrados.get(index);
-                        printPedido(pedido, "Pedido #" + (index + 1), false);
+                        printPedido(pedido, "Pedido #" + pedido.id, false);
                     });
                 } else {
                     System.out.println("Sem pedidos até o momento\n");
@@ -88,7 +86,7 @@ public class Main {
                 do {
                     itemSelected = pickItem(op - 1);
                     if (itemSelected != null) {
-                        listPedidos.get(currentIndex).setItem((Produto) itemSelected);
+                        pedidoCorrente.setItem((Produto) itemSelected);
                         Thread.sleep(750);
                     }
                 } while (itemSelected != null);
@@ -120,7 +118,7 @@ public class Main {
     }
 
     private static int enviarPedido () throws IOException {
-        printPedido(listPedidos.get(currentIndex), "Pedido atual", true);
+        printPedido(pedidoCorrente, "Pedido atual", true);
 
         Menus.printEnviarPedido();
         int op;
@@ -139,13 +137,13 @@ public class Main {
                 System.out.println("Insira a observação: ");
                 input.nextLine();
 
-                listPedidos.get(currentIndex).setObservacao(input.nextLine());
+                pedidoCorrente.setObservacao(input.nextLine());
                 System.out.println("Observação salva com sucesso!");
                 retorno = enviarPedido();
             }
             case 3 -> {
                 //salvar
-                JsonManager.salvarPedidos(listPedidos);
+                JsonManager.salvarPedido(pedidoCorrente);
                 System.out.println("Pedido enviado com sucesso!");
                 System.out.println("Deseja iniciar um novo pedido? (S/N)");
                 input.nextLine();
