@@ -19,7 +19,7 @@ public class JsonManager {
     public static void salvarPedidos (List<Pedido> pedidos) throws IOException {
         // mantêm os pedidos já registrados
         Gson gson = new Gson();
-        File arquivo = new File("./src/com/company/atv4/registro_pedidos.json");
+        File arquivo = new File("./src/com/company/registro_pedidos.json");
 
         List<Pedido> currList;
 
@@ -37,7 +37,7 @@ public class JsonManager {
         Gson gsonB = new GsonBuilder().setPrettyPrinting().create();
         ObjetoPedidos objPedidos = new ObjetoPedidos(currList);
         String json = gsonB.toJson(objPedidos);
-        FileWriter arquivoOut = new FileWriter("./src/com/company/atv4/registro_pedidos.json");
+        FileWriter arquivoOut = new FileWriter("./src/com/company/registro_pedidos.json");
         PrintWriter gravador = new PrintWriter(arquivoOut);
         gravador.print(json);
         gravador.close();
