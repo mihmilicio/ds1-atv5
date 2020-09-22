@@ -1,0 +1,72 @@
+{
+  "pedidos": [
+    {
+      "itens": [
+        {
+          "categoria": "PRATO",
+          "nome": "Filé de frango com molho de mostarda",
+          "preco": 12.5
+        }
+      ],
+      "observacao": "sjdhjdkhs",
+      "precoTotal": 12.5
+    },
+    {
+      "itens": [
+        {
+          "categoria": "BEBIDA",
+          "nome": "Sprite",
+          "preco": 4.7
+        },
+        {
+          "categoria": "BEBIDA",
+          "nome": "Água mineral",
+          "preco": 3.7
+        },
+        {
+          "categoria": "PRATO",
+          "nome": "Salada verde com molho de mostarda",
+          "preco": 4.5
+        }
+      ],
+      "precoTotal": 12.9
+    },
+    {
+      "itens": [
+        {
+          "categoria": "BEBIDA",
+          "nome": "Fanta Uva",
+          "preco": 6.5
+        },
+        {
+          "categoria": "PRATO",
+          "nome": "Fejoada",
+          "preco": 17.3
+        },
+        {
+          "categoria": "PRATO",
+          "nome": "Farofa crocante",
+          "preco": 3.5
+        }
+      ],
+      "observacao": "sdygsa sddfs",
+      "precoTotal": 27.3
+    },
+    {
+      "itens": [
+        {
+          "categoria": "BEBIDA",
+          "nome": "Pepsi",
+          "preco": 5.3
+        },
+        {
+          "categoria": "PRATO",
+          "nome": "Peixe ensopado",
+          "preco": 18.4
+        }
+      ],
+      "observacao": "rer rtert",
+      "precoTotal": 23.7
+    }
+  ]
+}
