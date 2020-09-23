@@ -18,7 +18,7 @@ class ObjetoPedidos {
 }
 
 public class JsonManager {
-    public static void salvarPedido(Pedido pedido) throws IOException {
+    public static int salvarPedido(Pedido pedido) throws IOException {
         // mantêm os pedidos já registrados
         Gson gson = new Gson();
         File arquivo = new File("./src/com/company/registro_pedidos.json");
@@ -45,8 +45,14 @@ public class JsonManager {
         }
 
         // cria novo objeto incrementando registros antigos
+        salvarArquivo(currList);
+
+        return pedido.id;
+    }
+
+    public static void salvarArquivo (List<Pedido> pedidos) throws IOException {
         Gson gsonB = new GsonBuilder().setPrettyPrinting().create();
-        ObjetoPedidos objPedidos = new ObjetoPedidos(currList);
+        ObjetoPedidos objPedidos = new ObjetoPedidos(pedidos);
         String json = gsonB.toJson(objPedidos);
         FileWriter arquivoOut = new FileWriter("./src/com/company/registro_pedidos.json");
         PrintWriter gravador = new PrintWriter(arquivoOut);
@@ -80,6 +86,26 @@ public class JsonManager {
             return pedidosExistentes.get(pedidosExistentes.size() - 1).id + 1;
         } else {
             return 1;
+        }
+    }
+
+    public static boolean deletarPedido(int id) throws IOException {
+        List<Pedido> pedidosExistentes = lerPedidos();
+
+        if (pedidosExistentes.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(id)) {
+            int index = IntStream.range(0, pedidosExistentes.size())
+                    .filter(i -> id == pedidosExistentes.get(i).id)
+                    .findFirst()
+                    .orElse(-1);
+            if (index >= 0) {
+                pedidosExistentes.remove(index);
+                salvarArquivo(pedidosExistentes);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 }

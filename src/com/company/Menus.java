@@ -10,6 +10,38 @@ import static com.company.Main.invalidOptionMessage;
 public class Menus {
     private static List<List<Produto>> listCompleta = new ArrayList<>();
 
+    private static void printInicial () {
+        System.out.println("\nMENU INICIAL");
+        System.out.println("[1] - Novo pedido");
+        System.out.println("[2] - Consultar pedidos registrados");
+        System.out.println("[3] - Modificar pedido");
+        System.out.println("[4] - Deletar pedido");
+        System.out.println("[5] - Encerrar :(");
+    }
+
+    public static int menuInicial () throws IOException, InterruptedException {
+        int op;
+        int retorno = 0;
+        do {
+            printInicial();
+
+            op = Main.input.nextInt();
+
+            if (op < 1 || op > 5) {
+                System.out.println(invalidOptionMessage);
+            } else {
+                retorno = Main.getOptionInicial(op);
+            }
+
+            if (retorno == 2) {
+                retorno = menuPrincipal();
+            }
+        } while (op > 5 || op < 1 || retorno == 1);
+
+
+
+        return retorno;
+    }
 
     private static void printPrincipal () {
         System.out.println("\nMENU PRINCIPAL");
@@ -78,6 +110,6 @@ public class Menus {
 
         listCompleta = list;
 
-        return menuPrincipal();
+        return menuInicial();
     }
 }

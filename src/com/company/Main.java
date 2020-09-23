@@ -35,8 +35,65 @@ public class Main {
         do {
             pedidoCorrente = new Pedido(JsonManager.getNextId());
             flowOption = Menus.iniciar(listCompleta);
-        } while (flowOption == 2);
+        } while (flowOption == 1);
 
+    }
+
+    /*
+     * RETORNOS
+     * 0 - padrão, apenas termina
+     * 1 - repeat menu
+     * 2 - iniciar pedido
+     * */
+    public static int getOptionInicial(int op) throws IOException, InterruptedException {
+        int retorno = 0;
+        switch (op) {
+            case 1 -> {
+                System.out.println("\nNOVO PEDIDO");
+                retorno = 2;
+            }
+            case 2 -> {
+                List<Pedido> pedidosRegistrados = JsonManager.lerPedidos();
+
+                System.out.println("\nPEDIDOS REGISTRADOS");
+                int listSize = pedidosRegistrados.size();
+                if (listSize > 0) {
+                    IntStream.range(0, listSize).forEach(index -> {
+                        Pedido pedido = pedidosRegistrados.get(index);
+                        printPedido(pedido, "Pedido #" + pedido.id, false);
+                    });
+                } else {
+                    System.out.println("Sem pedidos até o momento\n");
+                }
+
+                Thread.sleep(1250);
+                retorno = 1;
+
+            }
+            case 3 -> {
+                System.out.println("\nEDITAR PEDIDO");
+                // todo: editar obs, adicionar e remover itens
+            }
+            case 4 -> {
+                System.out.println("\nDELETAR PEDIDO");
+                System.out.print("Insira o ID do pedido para deletar: ");
+                int id = input.nextInt();
+                boolean sucesso = JsonManager.deletarPedido(id);
+                if (sucesso) {
+                    System.out.println("Pedido #"+id+" deletado.");
+                } else {
+                    System.out.println("Pedido com ID "+id+" não encontrado.");
+                }
+
+                retorno = 1;
+            }
+            case 5 -> {
+                System.out.println("Encerrando...");
+                System.exit(99);
+            }
+        }
+
+        return retorno;
     }
 
     /*
@@ -143,8 +200,8 @@ public class Main {
             }
             case 3 -> {
                 //salvar
-                JsonManager.salvarPedido(pedidoCorrente);
-                System.out.println("Pedido enviado com sucesso!");
+                int id = JsonManager.salvarPedido(pedidoCorrente);
+                System.out.println("Pedido salvo com sucesso! ID: " + id);
                 System.out.println("Deseja iniciar um novo pedido? (S/N)");
                 input.nextLine();
 
