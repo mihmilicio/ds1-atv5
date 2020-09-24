@@ -34,7 +34,10 @@ public class Menus {
             }
 
             if (retorno == 2) {
-                retorno = menuPrincipal();
+                retorno = menuItens("CREATE");
+            }
+            if (retorno == 3) {
+                retorno = menuItens("UPDATE");
             }
         } while (op > 5 || op < 1 || retorno == 1);
 
@@ -43,30 +46,35 @@ public class Menus {
         return retorno;
     }
 
-    private static void printPrincipal () {
-        System.out.println("\nMENU PRINCIPAL");
+    private static void printMenuItens (String tipo) {
+        System.out.println("\nMENU DE PRODUTOS");
         System.out.println("O que você deseja?");
         System.out.println("[1] - Soft Drinks");
         System.out.println("[2] - Vinhos");
         System.out.println("[3] - Pratos");
         System.out.println("[4] - Consultar carrinho");
-        System.out.println("[5] - Enviar pedido");
-        System.out.println("[6] - Consultar pedidos registrados");
+        if (tipo.equals("CREATE")) {
+            System.out.println("[5] - Enviar pedido");
+            System.out.println("[6] - Cancelar pedido");
+        } else if (tipo.equals("UPDATE")) {
+            System.out.println("[5] - Salvar alterações no pedido");
+            System.out.println("[6] - Cancelar alterações do pedido");
+        }
         System.out.println("[7] - Encerrar :(");
     }
 
-    public static int menuPrincipal () throws InterruptedException, IOException {
+    public static int menuItens (String tipo) throws InterruptedException, IOException {
         int op;
         int retorno = 0;
         do {
-            printPrincipal();
+            printMenuItens(tipo);
 
             op = Main.input.nextInt();
 
             if (op < 1 || op > 7) {
                 System.out.println(invalidOptionMessage);
             } else {
-                retorno = Main.getOptionPrincipal(op);
+                retorno = Main.getOptionItens(op, tipo);
             }
         } while (op > 7 || op < 1 || retorno == 1);
 
@@ -102,6 +110,11 @@ public class Menus {
         System.out.println("[2] - Adicionar observação ao pedido");
         System.out.println("[3] - Enviar");
         System.out.println("[4] - Cancelar pedido e encerrar");
+    }
+
+    public static void printOpcoesCarrinho () {
+        System.out.println("[1] - Continuar");
+        System.out.println("[2] - Remover itens");
     }
 
 

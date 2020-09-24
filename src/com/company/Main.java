@@ -35,7 +35,7 @@ public class Main {
         do {
             pedidoCorrente = new Pedido(JsonManager.getNextId());
             flowOption = Menus.iniciar(listCompleta);
-        } while (flowOption == 1);
+        } while (flowOption == 2);
 
     }
 
@@ -43,14 +43,14 @@ public class Main {
      * RETORNOS
      * 0 - padrão, apenas termina
      * 1 - repeat menu
-     * 2 - iniciar pedido
+     * 2 - nova sessão
      * */
     public static int getOptionInicial(int op) throws IOException, InterruptedException {
         int retorno = 0;
         switch (op) {
             case 1 -> {
                 System.out.println("\nNOVO PEDIDO");
-                retorno = 2;
+                retorno = Menus.menuItens("CREATE");
             }
             case 2 -> {
                 List<Pedido> pedidosRegistrados = JsonManager.lerPedidos();
@@ -60,7 +60,7 @@ public class Main {
                 if (listSize > 0) {
                     IntStream.range(0, listSize).forEach(index -> {
                         Pedido pedido = pedidosRegistrados.get(index);
-                        printPedido(pedido, "Pedido #" + pedido.id, false);
+                        printPedido(pedido, "Pedido #" + pedido.id, false, false);
                     });
                 } else {
                     System.out.println("Sem pedidos até o momento\n");
@@ -96,43 +96,53 @@ public class Main {
         return retorno;
     }
 
+
     /*
-    * RETORNOS
-    * 0 - padrão, apenas termina
-    * 1 - repeat menuPrincipal
-    * 2 - novo pedido (retornar true até o fim)
-    * */
-    public static int getOptionPrincipal(int op) throws InterruptedException, IOException {
+     * RETORNOS
+     * 0 - padrão, apenas termina
+     * 1 - repeat menuItens
+     * 2 - nova sessão (retornar true até o fim)
+     * */
+    public static int getOptionItens(int op, String tipo) throws InterruptedException, IOException {
         int retorno = 0;
         switch (op) {
             case 4 -> {
-                System.out.println("\nCARRINHO");
-                printPedido(pedidoCorrente, "Pedido atual", true);
-                Thread.sleep(1250);
-                retorno = 1;
+                do {
+                    System.out.println("\nCARRINHO");
+                    printPedido(pedidoCorrente, "Pedido corrente", true, true);
+                    Thread.sleep(1250);
+                    if (pedidoCorrente.itens.size() > 0) {
+                        Menus.printOpcoesCarrinho();
+                        int opCarrinho = 0;
+                        do {
+                            opCarrinho = Main.input.nextInt();
+
+                            if (opCarrinho < 1 || opCarrinho > 2) {
+                                System.out.println(invalidOptionMessage);
+                            }
+                        } while (opCarrinho < 1 || opCarrinho > 2);
+
+                        if (opCarrinho == 1) {
+                            retorno = 1;
+                        } else {
+                            removeItensFromPedido();
+                            retorno = -1;
+                        }
+                    } else {
+                        retorno = 1;
+                    }
+                } while (retorno == -1);
             }
             case 5 -> {
                 if (!pedidoCorrente.isValidPedido()) {
                     System.out.println(emptyPedidoMessage);
                     retorno = 1;
                 } else {
-                    retorno = enviarPedido();
+                    retorno = enviarPedido(tipo);
                 }
             }
             case 6 -> {
-                List<Pedido> pedidosRegistrados = JsonManager.lerPedidos();
 
-                System.out.println("\nPEDIDOS REGISTRADOS");
-                int listSize = pedidosRegistrados.size();
-                if (listSize > 0) {
-                    IntStream.range(0, listSize).forEach(index -> {
-                        Pedido pedido = pedidosRegistrados.get(index);
-                        printPedido(pedido, "Pedido #" + pedido.id, false);
-                    });
-                } else {
-                    System.out.println("Sem pedidos até o momento\n");
-                }
-                retorno = 1;
             }
             case 7 -> {
                 System.out.println("Encerrando...");
@@ -174,8 +184,24 @@ public class Main {
         }
     }
 
-    private static int enviarPedido () throws IOException {
-        printPedido(pedidoCorrente, "Pedido atual", true);
+    private static void removeItensFromPedido () {
+        int op;
+        do {
+            System.out.print("Insira o número do produto para remover: ");
+            op = input.nextInt();
+
+            if (op < 1 || op > pedidoCorrente.itens.size()) {
+                System.out.println(invalidOptionMessage);
+            }
+        } while (op < 1 || op > pedidoCorrente.itens.size());
+
+        String item = pedidoCorrente.itens.get(op - 1).nome;
+        pedidoCorrente.deleteItem(op - 1);
+        System.out.println(item + " removido do carrinho.");
+    }
+
+    private static int enviarPedido (String tipo) throws IOException {
+        printPedido(pedidoCorrente, "Pedido atual", true, false);
 
         Menus.printEnviarPedido();
         int op;
@@ -196,13 +222,13 @@ public class Main {
 
                 pedidoCorrente.setObservacao(input.nextLine());
                 System.out.println("Observação salva com sucesso!");
-                retorno = enviarPedido();
+                retorno = enviarPedido(tipo);
             }
             case 3 -> {
                 //salvar
                 int id = JsonManager.salvarPedido(pedidoCorrente);
                 System.out.println("Pedido salvo com sucesso! ID: " + id);
-                System.out.println("Deseja iniciar um novo pedido? (S/N)");
+                System.out.println("Deseja iniciar uma nova sessão? (S/N)");
                 input.nextLine();
 
                 String opNovo = input.nextLine();
@@ -218,9 +244,13 @@ public class Main {
         return retorno;
     }
 
-    private static void printPedido(Pedido pedido, String title, boolean printObservacao) {
+    private static void printPedido(Pedido pedido, String title, boolean printObservacao, boolean printIndex) {
         System.out.println(title + " | Preço total: R$ " + formatter.format(pedido.precoTotal));
-        pedido.itens.forEach(item -> System.out.println("\t"+ item.categoria + " " + item.nome + "\t ( R$ "+ formatter.format(item.preco) +" )"));
+        IntStream.range(0, pedido.itens.size()).forEach(index -> {
+            String indice = printIndex ? "["+(index + 1)+"] - " : "";
+            Produto item = pedido.itens.get(index);
+            System.out.println("\t"+ indice + item.categoria + " " + item.nome + "\t ( R$ "+ formatter.format(item.preco) +" )");
+        });
         if (printObservacao) {
             System.out.println("\tOBS: " + (pedido.observacao != null ? pedido.observacao : "---") );
         }

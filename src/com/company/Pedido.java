@@ -26,8 +26,17 @@ public class Pedido {
         this.precoTotal += prod.preco;
     }
 
+    public void deleteItem(int index) {
+        this.itens.remove(index);
+        calcPrecoTotal();
+    }
+
     public boolean isValidPedido() {
         return this.itens.size() > 0;
+    }
+
+    public void calcPrecoTotal() {
+        this.precoTotal = this.itens.stream().map(produto -> produto.preco).reduce((double) 0, Double::sum);
     }
 
     public void printItens() {
