@@ -22,6 +22,7 @@ public class Main {
     public static final String invalidOptionMessage = "Ops... Escolha uma opção válida...";
     public static final String errorCreate = "Erro ao criar pedido. Esse ID já existe.";
     public static final String errorUpdate = "Erro ao alterar pedido. ID não encontrado.";
+    public static final String errorDelete = "Erro ao deletar pedido. ID não encontrado.";
 
     public static void main(String[] args) throws IOException, InterruptedException {
         URL urlBebida = Main.class.getResource("bebidas-tabuladas.txt");
@@ -84,7 +85,7 @@ public class Main {
                 if (sucesso) {
                     System.out.println("Pedido #"+id+" deletado.");
                 } else {
-                    System.out.println("Pedido com ID "+id+" não encontrado.");
+                    System.out.println(errorDelete);
                 }
 
                 retorno = 1;
