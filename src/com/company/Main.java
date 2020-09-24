@@ -20,6 +20,8 @@ public class Main {
     public static final NumberFormat formatter = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
     public static final String emptyPedidoMessage = "Não é possível enviar um pedido vazio... Adicione pelo menos um item!";
     public static final String invalidOptionMessage = "Ops... Escolha uma opção válida...";
+    public static final String errorCreate = "Erro ao criar pedido. Esse ID já existe.";
+    public static final String errorUpdate = "Erro ao alterar pedido. ID não encontrado.";
 
     public static void main(String[] args) throws IOException, InterruptedException {
         URL urlBebida = Main.class.getResource("bebidas-tabuladas.txt");
@@ -53,7 +55,7 @@ public class Main {
                 retorno = Menus.menuItens("CREATE");
             }
             case 2 -> {
-                List<Pedido> pedidosRegistrados = JsonManager.lerPedidos();
+                List<Pedido> pedidosRegistrados = JsonManager.readPedidos();
 
                 System.out.println("\nPEDIDOS REGISTRADOS");
                 int listSize = pedidosRegistrados.size();
@@ -78,7 +80,7 @@ public class Main {
                 System.out.println("\nDELETAR PEDIDO");
                 System.out.print("Insira o ID do pedido para deletar: ");
                 int id = input.nextInt();
-                boolean sucesso = JsonManager.deletarPedido(id);
+                boolean sucesso = JsonManager.deletePedido(id);
                 if (sucesso) {
                     System.out.println("Pedido #"+id+" deletado.");
                 } else {
@@ -201,18 +203,18 @@ public class Main {
     }
 
     private static int enviarPedido (String tipo) throws IOException {
-        printPedido(pedidoCorrente, "Pedido atual", true, false);
+        printPedido(pedidoCorrente, "Pedido corrente", true, false);
 
-        Menus.printEnviarPedido();
+        Menus.printEnviarPedido(tipo);
         int op;
         int retorno = 0;
 
         do {
             op = input.nextInt();
-            if (op < 1 || op > 4) {
+            if (op < 1 || op > 3) {
                 System.out.println(invalidOptionMessage);
             }
-        } while (op < 1 || op > 4);
+        } while (op < 1 || op > 3);
 
         switch (op) {
             case 1 -> retorno = 1;
@@ -226,8 +228,22 @@ public class Main {
             }
             case 3 -> {
                 //salvar
-                int id = JsonManager.salvarPedido(pedidoCorrente);
-                System.out.println("Pedido salvo com sucesso! ID: " + id);
+                if (tipo.equals("CREATE")) {
+                    boolean sucesso = JsonManager.createPedido(pedidoCorrente);
+                    if (sucesso) {
+                        System.out.println("Pedido salvo com sucesso! ID: " + pedidoCorrente.id);
+                    } else {
+                        System.out.println(errorCreate);
+                    }
+                } else if (tipo.equals("UPDATE")) {
+                    boolean sucesso = JsonManager.updatePedido(pedidoCorrente);
+                    if (sucesso) {
+                        System.out.println("Pedido alterado com sucesso! ID: " + pedidoCorrente.id);
+                    } else {
+                        System.out.println(errorUpdate);
+                    }
+                }
+
                 System.out.println("Deseja iniciar uma nova sessão? (S/N)");
                 input.nextLine();
 

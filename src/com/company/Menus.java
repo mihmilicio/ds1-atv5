@@ -105,11 +105,15 @@ public class Menus {
         System.out.println("["+ (listSize + 1) +"] - Voltar ao menu principal");
     }
 
-    public static void printEnviarPedido () {
+    public static void printEnviarPedido (String tipo) {
         System.out.println("[1] - Continuar comprando");
-        System.out.println("[2] - Adicionar observação ao pedido");
-        System.out.println("[3] - Enviar");
-        System.out.println("[4] - Cancelar pedido e encerrar");
+        if (tipo.equals("CREATE")) {
+            System.out.println("[2] - Adicionar observação ao pedido");
+            System.out.println("[3] - Enviar");
+        } else if (tipo.equals("UPDATE")) {
+            System.out.println("[2] - Editar observação do pedido");
+            System.out.println("[3] - Salvar alterações");
+        }
     }
 
     public static void printOpcoesCarrinho () {

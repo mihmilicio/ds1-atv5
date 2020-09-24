@@ -18,36 +18,35 @@ class ObjetoPedidos {
 }
 
 public class JsonManager {
-    public static int salvarPedido(Pedido pedido) throws IOException {
+    public static boolean createPedido(Pedido pedido) throws IOException {
         // mantêm os pedidos já registrados
-        Gson gson = new Gson();
-        File arquivo = new File("./src/com/company/registro_pedidos.json");
+        List<Pedido> registros = getRegistros();
 
-        List<Pedido> currList;
-
-        if (arquivo.exists()) {
-            Reader reader = new FileReader(arquivo);
-            ObjetoPedidos currObjPedidos = gson.fromJson(reader, ObjetoPedidos.class);
-            reader.close();
-            currList = currObjPedidos.pedidos;
+        if (registros.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(pedido.id)) {
+            return false;
         } else {
-            currList = new ArrayList<>();
+            registros.add(pedido);
+            // cria novo objeto incrementando registros antigos
+            salvarArquivo(registros);
+            return true;
         }
+    }
 
-        if (currList.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(pedido.id)) {
-            int index = IntStream.range(0, currList.size())
-                    .filter(i -> pedido.id == currList.get(i).id)
+    public static boolean updatePedido(Pedido pedido) throws IOException {
+        List<Pedido> registros = getRegistros();
+
+        if (registros.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(pedido.id)) {
+            int index = IntStream.range(0, registros.size())
+                    .filter(i -> pedido.id == registros.get(i).id)
                     .findFirst()
                     .orElse(0);
-            currList.set(index, pedido);
+            registros.set(index, pedido);
+            // cria novo objeto incrementando registros antigos
+            salvarArquivo(registros);
+            return true;
         } else {
-            currList.add(pedido);
+            return false;
         }
-
-        // cria novo objeto incrementando registros antigos
-        salvarArquivo(currList);
-
-        return pedido.id;
     }
 
     public static void salvarArquivo (List<Pedido> pedidos) throws IOException {
@@ -60,7 +59,25 @@ public class JsonManager {
         gravador.close();
     }
 
-    public static List<Pedido> lerPedidos() throws IOException {
+    public static List<Pedido> getRegistros () throws IOException {
+        Gson gson = new Gson();
+        File arquivo = new File("./src/com/company/registro_pedidos.json");
+
+        List<Pedido> registros;
+
+        if (arquivo.exists()) {
+            Reader reader = new FileReader(arquivo);
+            ObjetoPedidos currObjPedidos = gson.fromJson(reader, ObjetoPedidos.class);
+            reader.close();
+            registros = currObjPedidos.pedidos;
+        } else {
+            registros = new ArrayList<>();
+        }
+
+        return registros;
+    }
+
+    public static List<Pedido> readPedidos() throws IOException {
         Gson gson = new Gson();
 
         File arquivo = new File("./src/com/company/registro_pedidos.json");
@@ -80,7 +97,7 @@ public class JsonManager {
     }
 
     public static int getNextId() throws IOException {
-        List<Pedido> pedidosExistentes = lerPedidos();
+        List<Pedido> pedidosExistentes = readPedidos();
         int listSize = pedidosExistentes.size();
         if (listSize > 0) {
             return pedidosExistentes.get(pedidosExistentes.size() - 1).id + 1;
@@ -89,8 +106,8 @@ public class JsonManager {
         }
     }
 
-    public static boolean deletarPedido(int id) throws IOException {
-        List<Pedido> pedidosExistentes = lerPedidos();
+    public static boolean deletePedido(int id) throws IOException {
+        List<Pedido> pedidosExistentes = readPedidos();
 
         if (pedidosExistentes.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(id)) {
             int index = IntStream.range(0, pedidosExistentes.size())
