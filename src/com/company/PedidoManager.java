@@ -22,7 +22,7 @@ public class PedidoManager {
         // mantêm os pedidos já registrados
         List<Pedido> registros = readPedidos();
 
-        if (registros.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(pedido.id)) {
+        if (registros.stream().map(ped -> ped.getId()).collect(Collectors.toList()).contains(pedido.getId())) {
             return false;
         } else {
             registros.add(pedido);
@@ -35,9 +35,9 @@ public class PedidoManager {
     public static boolean updatePedido(Pedido pedido) throws IOException {
         List<Pedido> registros = readPedidos();
 
-        if (registros.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(pedido.id)) {
+        if (registros.stream().map(ped -> ped.getId()).collect(Collectors.toList()).contains(pedido.getId())) {
             int index = IntStream.range(0, registros.size())
-                    .filter(i -> pedido.id == registros.get(i).id)
+                    .filter(i -> pedido.getId() == registros.get(i).getId())
                     .findFirst()
                     .orElse(0);
             registros.set(index, pedido);
@@ -82,7 +82,7 @@ public class PedidoManager {
         List<Pedido> pedidosExistentes = readPedidos();
         int listSize = pedidosExistentes.size();
         if (listSize > 0) {
-            return pedidosExistentes.get(pedidosExistentes.size() - 1).id + 1;
+            return pedidosExistentes.get(pedidosExistentes.size() - 1).getId() + 1;
         } else {
             return 1;
         }
@@ -91,9 +91,9 @@ public class PedidoManager {
     public static boolean deletePedido(int id) throws IOException {
         List<Pedido> pedidosExistentes = readPedidos();
 
-        if (pedidosExistentes.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(id)) {
+        if (pedidosExistentes.stream().map(ped -> ped.getId()).collect(Collectors.toList()).contains(id)) {
             int index = IntStream.range(0, pedidosExistentes.size())
-                    .filter(i -> id == pedidosExistentes.get(i).id)
+                    .filter(i -> id == pedidosExistentes.get(i).getId())
                     .findFirst()
                     .orElse(-1);
             if (index >= 0) {
@@ -111,9 +111,9 @@ public class PedidoManager {
     public static Pedido getPedidoById(int id) throws IOException {
         List<Pedido> registros = readPedidos();
 
-        if (registros.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(id)) {
+        if (registros.stream().map(ped -> ped.getId()).collect(Collectors.toList()).contains(id)) {
             int index = IntStream.range(0, registros.size())
-                    .filter(i -> id == registros.get(i).id)
+                    .filter(i -> id == registros.get(i).getId())
                     .findFirst()
                     .orElse(-1);
 

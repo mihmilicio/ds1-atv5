@@ -1,20 +1,13 @@
 package com.company;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class Pedido {
-    //todo: getters e setters
-    private static final NumberFormat formatter = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
-
-    int id;
-    final List<Produto> itens;
-    public String observacao;
-    double precoTotal;
+    private final int id;
+    private final List<Produto> itens;
+    private String observacao;
+    private double precoTotal;
 
     public Pedido(int id) {
         this.itens = new ArrayList<>();
@@ -43,5 +36,14 @@ public class Pedido {
     public void setObservacao(String obs) {
         this.observacao = obs;
     }
+    public String getObservacao() {
+        return this.observacao;
+    }
+
+    public List<Produto> getItens() { return this.itens; }
+
+    public double getPrecoTotal() { return this.precoTotal; }
+
+    public int getId() { return this.id; }
 }
 

@@ -81,7 +81,7 @@ public class Main {
                 if (listSize > 0) {
                     IntStream.range(0, listSize).forEach(index -> {
                         Pedido pedido = pedidosRegistrados.get(index);
-                        printPedido(pedido, "Pedido #" + pedido.id, false, false);
+                        printPedido(pedido, "Pedido #" + pedido.getId(), false, false);
                     });
                 } else {
                     System.out.println("Sem pedidos até o momento\n");
@@ -145,7 +145,7 @@ public class Main {
                     System.out.println("\nCARRINHO");
                     printPedido(pedidoCorrente, "Pedido corrente", true, true);
                     Thread.sleep(1250);
-                    if (pedidoCorrente.itens.size() > 0) {
+                    if (pedidoCorrente.getItens().size() > 0) {
                         Menus.printOpcoesCarrinho();
                         int opCarrinho = 0;
                         do {
@@ -207,7 +207,7 @@ public class Main {
                 retorno = Menus.menuItens("UPDATE");
             }
             case 2 -> {
-                System.out.println("OBS: "+ pedidoCorrente.observacao);
+                System.out.println("OBS: "+ pedidoCorrente.getObservacao());
                 System.out.println("Deseja alterar a observação? (S/N)");
                 input.nextLine();
 
@@ -354,12 +354,12 @@ public class Main {
             System.out.print("Insira o número do produto para remover: ");
             op = input.nextInt();
 
-            if (op < 1 || op > pedidoCorrente.itens.size()) {
+            if (op < 1 || op > pedidoCorrente.getItens().size()) {
                 System.out.println(invalidOptionMessage);
             }
-        } while (op < 1 || op > pedidoCorrente.itens.size());
+        } while (op < 1 || op > pedidoCorrente.getItens().size());
 
-        String item = pedidoCorrente.itens.get(op - 1).nome;
+        String item = pedidoCorrente.getItens().get(op - 1).nome;
         pedidoCorrente.deleteItem(op - 1);
         System.out.println(item + " removido do carrinho.");
     }
@@ -393,14 +393,14 @@ public class Main {
                 if (tipo.equals("CREATE")) {
                     boolean sucesso = PedidoManager.createPedido(pedidoCorrente);
                     if (sucesso) {
-                        System.out.println("Pedido salvo com sucesso! ID: " + pedidoCorrente.id);
+                        System.out.println("Pedido salvo com sucesso! ID: " + pedidoCorrente.getId());
                     } else {
                         System.out.println(errorCreate);
                     }
                 } else if (tipo.equals("UPDATE")) {
                     boolean sucesso = PedidoManager.updatePedido(pedidoCorrente);
                     if (sucesso) {
-                        System.out.println("Pedido alterado com sucesso! ID: " + pedidoCorrente.id);
+                        System.out.println("Pedido alterado com sucesso! ID: " + pedidoCorrente.getId());
                     } else {
                         System.out.println(errorUpdate);
                     }
@@ -423,14 +423,14 @@ public class Main {
     }
 
     private static void printPedido(Pedido pedido, String title, boolean printObservacao, boolean printIndex) {
-        System.out.println(title + " | Preço total: R$ " + formatter.format(pedido.precoTotal));
-        IntStream.range(0, pedido.itens.size()).forEach(index -> {
+        System.out.println(title + " | Preço total: R$ " + formatter.format(pedido.getPrecoTotal()));
+        IntStream.range(0, pedido.getItens().size()).forEach(index -> {
             String indice = printIndex ? "["+(index + 1)+"] - " : "";
-            Produto item = pedido.itens.get(index);
+            Produto item = pedido.getItens().get(index);
             System.out.println("\t"+ indice + item.categoria + " " + item.nome + "\t ( R$ "+ formatter.format(item.preco) +" )");
         });
         if (printObservacao) {
-            System.out.println("\tOBS: " + (pedido.observacao != null ? pedido.observacao : "---") );
+            System.out.println("\tOBS: " + (pedido.getObservacao() != null ? pedido.getObservacao() : "---") );
         }
         System.out.println();
     }
