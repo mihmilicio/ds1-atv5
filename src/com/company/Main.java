@@ -37,7 +37,7 @@ public class Main {
 
         int flowOption;
         do {
-            pedidoCorrente = new Pedido(PedidoRepository.getNextId());
+            pedidoCorrente = new Pedido(PedidoManager.getNextId());
             flowOption = Menus.iniciar(listCompleta);
         } while (flowOption == 2);
 
@@ -79,7 +79,7 @@ public class Main {
                 retorno = Menus.menuItens("CREATE");
             }
             case 2 -> {
-                List<Pedido> pedidosRegistrados = PedidoRepository.readPedidos();
+                List<Pedido> pedidosRegistrados = PedidoManager.readPedidos();
 
                 System.out.println("\nPEDIDOS REGISTRADOS");
                 int listSize = pedidosRegistrados.size();
@@ -104,7 +104,7 @@ public class Main {
                 System.out.println("\nDELETAR PEDIDO");
                 System.out.print("Insira o ID do pedido para deletar: ");
                 int id = input.nextInt();
-                boolean sucesso = PedidoRepository.deletePedido(id);
+                boolean sucesso = PedidoManager.deletePedido(id);
                 if (sucesso) {
                     System.out.println("Pedido #"+id+" deletado.");
                 } else {
@@ -280,14 +280,14 @@ public class Main {
             case 3 -> {
                 //salvar
                 if (tipo.equals("CREATE")) {
-                    boolean sucesso = PedidoRepository.createPedido(pedidoCorrente);
+                    boolean sucesso = PedidoManager.createPedido(pedidoCorrente);
                     if (sucesso) {
                         System.out.println("Pedido salvo com sucesso! ID: " + pedidoCorrente.id);
                     } else {
                         System.out.println(errorCreate);
                     }
                 } else if (tipo.equals("UPDATE")) {
-                    boolean sucesso = PedidoRepository.updatePedido(pedidoCorrente);
+                    boolean sucesso = PedidoManager.updatePedido(pedidoCorrente);
                     if (sucesso) {
                         System.out.println("Pedido alterado com sucesso! ID: " + pedidoCorrente.id);
                     } else {

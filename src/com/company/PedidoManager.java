@@ -17,7 +17,7 @@ class ObjetoPedidos {
     }
 }
 
-public class PedidoRepository {
+public class PedidoManager {
     public static boolean createPedido(Pedido pedido) throws IOException {
         // mantêm os pedidos já registrados
         List<Pedido> registros = readPedidos();
