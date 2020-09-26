@@ -118,6 +118,10 @@ public class Main {
                 retorno = 1;
             }
             case 5 -> {
+                System.out.println("Retornando ao menu inicial...");
+                retorno = 2;
+            }
+            case 6 -> {
                 System.out.println("Encerrando...");
                 System.exit(99);
             }

@@ -44,7 +44,8 @@ public class Menus {
         System.out.println("[2] - Consultar pedidos registrados");
         System.out.println("[3] - Modificar pedido");
         System.out.println("[4] - Deletar pedido");
-        System.out.println("[5] - Encerrar :(");
+        System.out.println("[5] - Voltar");
+        System.out.println("[6] - Encerrar :(");
     }
 
     public static int menuPedido() throws IOException, InterruptedException {
@@ -55,12 +56,12 @@ public class Menus {
 
             op = Main.input.nextInt();
 
-            if (op < 1 || op > 5) {
+            if (op < 1 || op > 6) {
                 System.out.println(invalidOptionMessage);
             } else {
                 retorno = Main.getOptionPedido(op);
             }
-        } while (op > 5 || op < 1 || retorno == 1);
+        } while (op > 6 || op < 1 || retorno == 1);
 
         return retorno;
     }
