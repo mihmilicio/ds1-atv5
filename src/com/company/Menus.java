@@ -8,8 +8,6 @@ import java.util.stream.IntStream;
 import static com.company.Main.invalidOptionMessage;
 
 public class Menus {
-    private static List<List<Produto>> listCompleta = new ArrayList<>();
-
     private static void printInicial() {
         System.out.println("\nMENU INICIAL");
         System.out.println("Para qual menu deseja ir?");
@@ -103,7 +101,7 @@ public class Menus {
 
     }
 
-    public static void printProdutosCategoria(int catPos) {
+    public static void printProdutosCategoria(int catPos, List<Produto> produtoList) {
         String banner;
         if (catPos == 0) {
             banner = "|           SOFT DRINKS           |";
@@ -118,9 +116,9 @@ public class Menus {
         System.out.println(" \\_______________________________/");
         System.out.println();
 
-        int listSize = listCompleta.get(catPos).size();
+        int listSize = produtoList.size();
         IntStream.range(0, listSize).forEach(index -> {
-            Produto produto = listCompleta.get(catPos).get(index);
+            Produto produto = produtoList.get(index);
             System.out.println("["+ (index + 1) +"] - " + produto.nome + "\t\t( R$ " + Main.formatter.format(produto.preco) + " )");
         });
         System.out.println("["+ (listSize + 1) +"] - Voltar ao menu principal");
@@ -199,8 +197,6 @@ public class Menus {
 
     public static int iniciar (List<List<Produto>> list) throws InterruptedException, IOException {
         System.out.println("Bem-vindo ao restaurante!");
-
-        listCompleta = list;
 
         return menuInicial();
     }

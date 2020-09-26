@@ -1,7 +1,7 @@
 package com.company;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -26,14 +26,9 @@ public class Main {
     public static final String errorDelete = "Erro ao deletar pedido. ID não encontrado.";
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        URL urlBebida = Main.class.getResource("bebidas-tabuladas.txt");
-        listCompleta.add(MenuFileProcessor.processar(urlBebida, "\t"));
-
-        URL urlVinho = Main.class.getResource("vinhos-tabulados.txt");
-        listCompleta.add(MenuFileProcessor.processar(urlVinho, "\t"));
-
-        URL urlPrato = Main.class.getResource("pratos.csv");
-        listCompleta.add(MenuFileProcessor.processar(urlPrato, ";"));
+        listCompleta.add(ProdutoManager.readProdutos(0));
+        listCompleta.add(ProdutoManager.readProdutos(1));
+        listCompleta.add(ProdutoManager.readProdutos(2));
 
         int flowOption;
         do {
@@ -264,11 +259,12 @@ public class Main {
         return retorno;
     }
 
-    private static Object pickItem (int catPos) {
+    private static Object pickItem (int catPos) throws FileNotFoundException {
         int pick;
+        listCompleta.set(catPos, ProdutoManager.readProdutos(catPos));
         List<Produto> catList = listCompleta.get(catPos);
         do {
-            Menus.printProdutosCategoria(catPos);
+            Menus.printProdutosCategoria(catPos, catList);
             pick = Main.input.nextInt();
 
             if (pick < 1 || pick > catList.size() + 1) {
