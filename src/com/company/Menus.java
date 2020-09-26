@@ -200,7 +200,7 @@ public class Menus {
     }
 
 
-    public static int iniciar (List<List<Produto>> list) throws InterruptedException, IOException {
+    public static int iniciar() throws InterruptedException, IOException {
         System.out.println("Bem-vindo ao restaurante!");
 
         return menuInicial();

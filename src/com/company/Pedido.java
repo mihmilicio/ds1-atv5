@@ -25,8 +25,8 @@ public class Pedido {
         calcPrecoTotal();
     }
 
-    public boolean isValidPedido() {
-        return this.itens.size() > 0;
+    public boolean isInvalidPedido() {
+        return this.itens.size() == 0;
     }
 
     public void calcPrecoTotal() {

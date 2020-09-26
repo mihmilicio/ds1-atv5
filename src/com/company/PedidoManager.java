@@ -22,7 +22,7 @@ public class PedidoManager {
         // mantêm os pedidos já registrados
         List<Pedido> registros = readPedidos();
 
-        if (registros.stream().map(ped -> ped.getId()).collect(Collectors.toList()).contains(pedido.getId())) {
+        if (registros.stream().map(Pedido::getId).collect(Collectors.toList()).contains(pedido.getId())) {
             return false;
         } else {
             registros.add(pedido);
@@ -35,7 +35,7 @@ public class PedidoManager {
     public static boolean updatePedido(Pedido pedido) throws IOException {
         List<Pedido> registros = readPedidos();
 
-        if (registros.stream().map(ped -> ped.getId()).collect(Collectors.toList()).contains(pedido.getId())) {
+        if (registros.stream().map(Pedido::getId).collect(Collectors.toList()).contains(pedido.getId())) {
             int index = IntStream.range(0, registros.size())
                     .filter(i -> pedido.getId() == registros.get(i).getId())
                     .findFirst()
@@ -91,7 +91,7 @@ public class PedidoManager {
     public static boolean deletePedido(int id) throws IOException {
         List<Pedido> pedidosExistentes = readPedidos();
 
-        if (pedidosExistentes.stream().map(ped -> ped.getId()).collect(Collectors.toList()).contains(id)) {
+        if (pedidosExistentes.stream().map(Pedido::getId).collect(Collectors.toList()).contains(id)) {
             int index = IntStream.range(0, pedidosExistentes.size())
                     .filter(i -> id == pedidosExistentes.get(i).getId())
                     .findFirst()
@@ -111,7 +111,7 @@ public class PedidoManager {
     public static Pedido getPedidoById(int id) throws IOException {
         List<Pedido> registros = readPedidos();
 
-        if (registros.stream().map(ped -> ped.getId()).collect(Collectors.toList()).contains(id)) {
+        if (registros.stream().map(Pedido::getId).collect(Collectors.toList()).contains(id)) {
             int index = IntStream.range(0, registros.size())
                     .filter(i -> id == registros.get(i).getId())
                     .findFirst()

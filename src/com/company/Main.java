@@ -33,7 +33,7 @@ public class Main {
         int flowOption;
         do {
             pedidoCorrente = new Pedido(PedidoManager.getNextId());
-            flowOption = Menus.iniciar(listCompleta);
+            flowOption = Menus.iniciar();
         } while (flowOption == 2);
 
     }
@@ -45,16 +45,12 @@ public class Main {
     public static int getOptionInicial(int op) throws IOException, InterruptedException {
         int retorno = 0;
         switch (op) {
-            case 1 -> {
-                retorno = Menus.menuPedido();
-            }
+            case 1 -> retorno = Menus.menuPedido();
             case 5 -> {
                 System.out.println("Encerrando...");
                 System.exit(99);
             }
-            default -> {
-                retorno = Menus.menuCategoria(op - 2);
-            }
+            default -> retorno = Menus.menuCategoria(op - 2);
         }
 
         return retorno;
@@ -147,7 +143,7 @@ public class Main {
                     Thread.sleep(1250);
                     if (pedidoCorrente.getItens().size() > 0) {
                         Menus.printOpcoesCarrinho();
-                        int opCarrinho = 0;
+                        int opCarrinho;
                         do {
                             opCarrinho = Main.input.nextInt();
 
@@ -168,7 +164,7 @@ public class Main {
                 } while (retorno == -1);
             }
             case 5 -> {
-                if (!pedidoCorrente.isValidPedido()) {
+                if (pedidoCorrente.isInvalidPedido()) {
                     System.out.println(emptyPedidoMessage);
                     retorno = 1;
                 } else {
@@ -203,9 +199,7 @@ public class Main {
     public static int getOptionEditar(int op) throws IOException, InterruptedException {
         int retorno = 0;
         switch (op) {
-            case 1 -> {
-                retorno = Menus.menuItens("UPDATE");
-            }
+            case 1 -> retorno = Menus.menuItens("UPDATE");
             case 2 -> {
                 System.out.println("OBS: "+ pedidoCorrente.getObservacao());
                 System.out.println("Deseja alterar a observação? (S/N)");
@@ -221,7 +215,7 @@ public class Main {
                 retorno = 1;
             }
             case 3 -> {
-                if (!pedidoCorrente.isValidPedido()) {
+                if (pedidoCorrente.isInvalidPedido()) {
                     System.out.println(emptyPedidoMessage);
                     retorno = 1;
                 } else {
