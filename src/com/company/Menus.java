@@ -142,6 +142,31 @@ public class Menus {
         System.out.println("[2] - Remover itens");
     }
 
+    private static void printMenuEditar () {
+        System.out.println("[1] - Editar itens");
+        System.out.println("[2] - Editar observação");
+        System.out.println("[3] - Salvar alterações");
+        System.out.println("[4] - Cancelar alterações");
+    }
+
+    public static int menuEditar () throws IOException, InterruptedException {
+        int op;
+        int retorno = 0;
+        do {
+            printMenuEditar();
+
+            op = Main.input.nextInt();
+
+            if (op < 1 || op > 4) {
+                System.out.println(invalidOptionMessage);
+            } else {
+                retorno = Main.getOptionEditar(op);
+            }
+        } while (op > 4 || op < 1 || retorno == 1);
+
+        return retorno;
+    }
+
     private static void printMenuCategoria (int catPos) {
         String cat = Main.categorias[catPos];
         String art = Main.artigosCategorias[catPos];

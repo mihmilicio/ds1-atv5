@@ -23,9 +23,15 @@
           "categoria": "VINHO",
           "nome": "Moscato",
           "preco": 35.25
+        },
+        {
+          "categoria": "PRATO",
+          "nome": "Picadinho de carne",
+          "preco": 16.5
         }
       ],
-      "precoTotal": 35.25
+      "observacao": "",
+      "precoTotal": 51.75
     }
   ]
 }

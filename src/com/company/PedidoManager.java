@@ -107,4 +107,21 @@ public class PedidoManager {
             return false;
         }
     }
+
+    public static Pedido getPedidoById(int id) throws IOException {
+        List<Pedido> registros = readPedidos();
+
+        if (registros.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(id)) {
+            int index = IntStream.range(0, registros.size())
+                    .filter(i -> id == registros.get(i).id)
+                    .findFirst()
+                    .orElse(-1);
+
+            if (index != -1) {
+                return registros.get(index);
+            }
+        }
+
+        return null;
+    }
 }

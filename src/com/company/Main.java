@@ -98,7 +98,16 @@ public class Main {
             }
             case 3 -> {
                 System.out.println("\nEDITAR PEDIDO");
-                // todo: editar obs, adicionar e remover itens
+                System.out.print("Insira o ID do pedido para editar: ");
+                int id = input.nextInt();
+                Pedido pedido = PedidoManager.getPedidoById(id);
+                if (pedido != null) {
+                    pedidoCorrente = pedido;
+                    retorno = Menus.menuEditar();
+                } else {
+                    System.out.println(errorUpdate);
+                    retorno = 1;
+                }
             }
             case 4 -> {
                 System.out.println("\nDELETAR PEDIDO");
@@ -168,7 +177,7 @@ public class Main {
                 }
             }
             case 6 -> {
-
+                //todo
             }
             case 7 -> {
                 System.out.println("Encerrando...");
@@ -187,6 +196,43 @@ public class Main {
             }
         }
 
+        return retorno;
+    }
+
+
+    public static int getOptionEditar(int op) throws IOException, InterruptedException {
+        int retorno = 0;
+        switch (op) {
+            case 1 -> {
+                retorno = Menus.menuItens("UPDATE");
+            }
+            case 2 -> {
+                System.out.println("OBS: "+ pedidoCorrente.observacao);
+                System.out.println("Deseja alterar a observação? (S/N)");
+                input.nextLine();
+
+                String opNovo = input.nextLine();
+
+                if (opNovo.equals("S") || opNovo.equals("s")) {
+                    System.out.println("Insira a nova observação: ");
+                    pedidoCorrente.setObservacao(input.nextLine());
+                    System.out.println("Observação alterada com sucesso!");
+                }
+                retorno = 1;
+            }
+            case 3 -> {
+                if (!pedidoCorrente.isValidPedido()) {
+                    System.out.println(emptyPedidoMessage);
+                    retorno = 1;
+                } else {
+                    retorno = enviarPedido("UPDATE");
+                }
+            }
+            case 4 -> {
+                retorno = 2;
+                System.out.println("Alterações canceladas, voltando ao menu inicial.");
+            }
+        }
         return retorno;
     }
 
