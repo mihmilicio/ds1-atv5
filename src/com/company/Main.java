@@ -177,7 +177,8 @@ public class Main {
                 }
             }
             case 6 -> {
-                //todo
+                retorno = 2;
+                System.out.println("Pedido cancelado, voltando ao menu inicial.");
             }
             case 7 -> {
                 System.out.println("Encerrando...");
