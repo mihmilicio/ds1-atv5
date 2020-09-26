@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class Pedido {
+    //todo: getters e setters
     private static final NumberFormat formatter = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR")));
 
     int id;
@@ -39,15 +40,8 @@ public class Pedido {
         this.precoTotal = this.itens.stream().map(produto -> produto.preco).reduce((double) 0, Double::sum);
     }
 
-    public void printItens() {
-        this.itens.forEach(item -> System.out.println("\t"+ item.nome + "\t ( R$ "+ formatter.format(item.preco) +" )"));
-    }
-
-    public double getPrecoTotal() {
-        return this.precoTotal;
-    }
-
     public void setObservacao(String obs) {
         this.observacao = obs;
     }
 }
+

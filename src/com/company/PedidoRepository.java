@@ -17,10 +17,10 @@ class ObjetoPedidos {
     }
 }
 
-public class JsonManager {
+public class PedidoRepository {
     public static boolean createPedido(Pedido pedido) throws IOException {
         // mantêm os pedidos já registrados
-        List<Pedido> registros = getRegistros();
+        List<Pedido> registros = readPedidos();
 
         if (registros.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(pedido.id)) {
             return false;
@@ -33,7 +33,7 @@ public class JsonManager {
     }
 
     public static boolean updatePedido(Pedido pedido) throws IOException {
-        List<Pedido> registros = getRegistros();
+        List<Pedido> registros = readPedidos();
 
         if (registros.stream().map(ped -> ped.id).collect(Collectors.toList()).contains(pedido.id)) {
             int index = IntStream.range(0, registros.size())
@@ -57,24 +57,6 @@ public class JsonManager {
         PrintWriter gravador = new PrintWriter(arquivoOut);
         gravador.print(json);
         gravador.close();
-    }
-
-    public static List<Pedido> getRegistros () throws IOException {
-        Gson gson = new Gson();
-        File arquivo = new File("./src/com/company/registro_pedidos.json");
-
-        List<Pedido> registros;
-
-        if (arquivo.exists()) {
-            Reader reader = new FileReader(arquivo);
-            ObjetoPedidos currObjPedidos = gson.fromJson(reader, ObjetoPedidos.class);
-            reader.close();
-            registros = currObjPedidos.pedidos;
-        } else {
-            registros = new ArrayList<>();
-        }
-
-        return registros;
     }
 
     public static List<Pedido> readPedidos() throws IOException {

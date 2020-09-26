@@ -12,7 +12,8 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Main {
-    private static final String[] categorias = { "BEBIDA", "VINHO", "PRATO" };
+    public static final String[] categorias = { "BEBIDA", "VINHO", "PRATO" };
+    public static final String[] artigosCategorias = { "a", "o", "o" };
     public static final Scanner input = new Scanner(System.in);
     private static final List<List<Produto>> listCompleta = new ArrayList<>();
     private static Pedido pedidoCorrente;
@@ -36,10 +37,32 @@ public class Main {
 
         int flowOption;
         do {
-            pedidoCorrente = new Pedido(JsonManager.getNextId());
+            pedidoCorrente = new Pedido(PedidoRepository.getNextId());
             flowOption = Menus.iniciar(listCompleta);
         } while (flowOption == 2);
 
+    }
+
+    /*
+    * RETORNOS
+    *
+    * */
+    public static int getOptionInicial(int op) throws IOException, InterruptedException {
+        int retorno = 0;
+        switch (op) {
+            case 1 -> {
+                retorno = Menus.menuPedido();
+            }
+            case 5 -> {
+                System.out.println("Encerrando...");
+                System.exit(99);
+            }
+            default -> {
+                retorno = Menus.menuCategoria(op - 2);
+            }
+        }
+
+        return retorno;
     }
 
     /*
@@ -48,7 +71,7 @@ public class Main {
      * 1 - repeat menu
      * 2 - nova sessão
      * */
-    public static int getOptionInicial(int op) throws IOException, InterruptedException {
+    public static int getOptionPedido(int op) throws IOException, InterruptedException {
         int retorno = 0;
         switch (op) {
             case 1 -> {
@@ -56,7 +79,7 @@ public class Main {
                 retorno = Menus.menuItens("CREATE");
             }
             case 2 -> {
-                List<Pedido> pedidosRegistrados = JsonManager.readPedidos();
+                List<Pedido> pedidosRegistrados = PedidoRepository.readPedidos();
 
                 System.out.println("\nPEDIDOS REGISTRADOS");
                 int listSize = pedidosRegistrados.size();
@@ -81,7 +104,7 @@ public class Main {
                 System.out.println("\nDELETAR PEDIDO");
                 System.out.print("Insira o ID do pedido para deletar: ");
                 int id = input.nextInt();
-                boolean sucesso = JsonManager.deletePedido(id);
+                boolean sucesso = PedidoRepository.deletePedido(id);
                 if (sucesso) {
                     System.out.println("Pedido #"+id+" deletado.");
                 } else {
@@ -167,11 +190,38 @@ public class Main {
         return retorno;
     }
 
+
+
+    public static int getOptionCategoria(int op, int catPos) {
+        int retorno = 0;
+        //todo
+        switch(op) {
+            case 1 -> {
+
+            }
+            case 2 -> {
+
+            }
+            case 3 -> {
+
+            }
+            case 4 -> {
+
+            }
+            case 5 -> {
+                System.out.println("Encerrando...");
+                System.exit(99);
+            }
+        }
+
+        return retorno;
+    }
+
     private static Object pickItem (int catPos) {
         int pick;
         List<Produto> catList = listCompleta.get(catPos);
         do {
-            Menus.printCategoria(catPos);
+            Menus.printProdutosCategoria(catPos);
             pick = Main.input.nextInt();
 
             if (pick < 1 || pick > catList.size() + 1) {
@@ -230,14 +280,14 @@ public class Main {
             case 3 -> {
                 //salvar
                 if (tipo.equals("CREATE")) {
-                    boolean sucesso = JsonManager.createPedido(pedidoCorrente);
+                    boolean sucesso = PedidoRepository.createPedido(pedidoCorrente);
                     if (sucesso) {
                         System.out.println("Pedido salvo com sucesso! ID: " + pedidoCorrente.id);
                     } else {
                         System.out.println(errorCreate);
                     }
                 } else if (tipo.equals("UPDATE")) {
-                    boolean sucesso = JsonManager.updatePedido(pedidoCorrente);
+                    boolean sucesso = PedidoRepository.updatePedido(pedidoCorrente);
                     if (sucesso) {
                         System.out.println("Pedido alterado com sucesso! ID: " + pedidoCorrente.id);
                     } else {

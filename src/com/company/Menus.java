@@ -10,12 +10,13 @@ import static com.company.Main.invalidOptionMessage;
 public class Menus {
     private static List<List<Produto>> listCompleta = new ArrayList<>();
 
-    private static void printInicial () {
+    private static void printInicial() {
         System.out.println("\nMENU INICIAL");
-        System.out.println("[1] - Novo pedido");
-        System.out.println("[2] - Consultar pedidos registrados");
-        System.out.println("[3] - Modificar pedido");
-        System.out.println("[4] - Deletar pedido");
+        System.out.println("Para qual menu deseja ir?");
+        System.out.println("[1] - Pedidos");
+        System.out.println("[2] - Bebidas");
+        System.out.println("[3] - Vinhos");
+        System.out.println("[4] - Pratos");
         System.out.println("[5] - Encerrar :(");
     }
 
@@ -32,13 +33,6 @@ public class Menus {
             } else {
                 retorno = Main.getOptionInicial(op);
             }
-
-            if (retorno == 2) {
-                retorno = menuItens("CREATE");
-            }
-            if (retorno == 3) {
-                retorno = menuItens("UPDATE");
-            }
         } while (op > 5 || op < 1 || retorno == 1);
 
 
@@ -46,8 +40,35 @@ public class Menus {
         return retorno;
     }
 
+    private static void printMenuPedido() {
+        System.out.println("\nMENU DE PEDIDO");
+        System.out.println("[1] - Novo pedido");
+        System.out.println("[2] - Consultar pedidos registrados");
+        System.out.println("[3] - Modificar pedido");
+        System.out.println("[4] - Deletar pedido");
+        System.out.println("[5] - Encerrar :(");
+    }
+
+    public static int menuPedido() throws IOException, InterruptedException {
+        int op;
+        int retorno = 0;
+        do {
+            printMenuPedido();
+
+            op = Main.input.nextInt();
+
+            if (op < 1 || op > 5) {
+                System.out.println(invalidOptionMessage);
+            } else {
+                retorno = Main.getOptionPedido(op);
+            }
+        } while (op > 5 || op < 1 || retorno == 1);
+
+        return retorno;
+    }
+
     private static void printMenuItens (String tipo) {
-        System.out.println("\nMENU DE PRODUTOS");
+        System.out.println("\nMENU DE COMPRA");
         System.out.println("O que você deseja?");
         System.out.println("[1] - Soft Drinks");
         System.out.println("[2] - Vinhos");
@@ -82,7 +103,7 @@ public class Menus {
 
     }
 
-    public static void printCategoria (int catPos) {
+    public static void printProdutosCategoria(int catPos) {
         String banner;
         if (catPos == 0) {
             banner = "|           SOFT DRINKS           |";
@@ -119,6 +140,35 @@ public class Menus {
     public static void printOpcoesCarrinho () {
         System.out.println("[1] - Continuar");
         System.out.println("[2] - Remover itens");
+    }
+
+    private static void printMenuCategoria (int catPos) {
+        String cat = Main.categorias[catPos];
+        String art = Main.artigosCategorias[catPos];
+        System.out.println("\nMENU DE " + cat);
+        System.out.println("[1] - Nov"+ art +" "+cat.toLowerCase());
+        System.out.println("[2] - Consultar "+ cat.toLowerCase() +"s registrad"+art+"s");
+        System.out.println("[3] - Modificar "+ cat.toLowerCase());
+        System.out.println("[4] - Deletar "+ cat.toLowerCase());
+        System.out.println("[5] - Encerrar :(");
+    }
+
+    public static int menuCategoria (int catPos) {
+        int op;
+        int retorno = 0;
+        do {
+            printMenuCategoria(catPos);
+
+            op = Main.input.nextInt();
+
+            if (op < 1 || op > 5) {
+                System.out.println(invalidOptionMessage);
+            } else {
+                retorno = Main.getOptionCategoria(op, catPos);
+            }
+        } while (op > 5 || op < 1 || retorno == 1);
+
+        return retorno;
     }
 
 

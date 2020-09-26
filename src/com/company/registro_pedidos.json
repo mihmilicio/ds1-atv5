@@ -15,6 +15,17 @@
         }
       ],
       "precoTotal": 12.899999999999999
+    },
+    {
+      "id": 2,
+      "itens": [
+        {
+          "categoria": "VINHO",
+          "nome": "Moscato",
+          "preco": 35.25
+        }
+      ],
+      "precoTotal": 35.25
     }
   ]
 }
