@@ -238,23 +238,87 @@ public class Main {
 
 
 
-    public static int getOptionCategoria(int op, int catPos) {
+    public static int getOptionCategoria(int op, int catPos) throws IOException, InterruptedException {
         int retorno = 0;
-        //todo
+        String cat = categorias[catPos];
+        String art = artigosCategorias[catPos];
+        listCompleta.set(catPos, ProdutoManager.readProdutos(catPos));
+        List<Produto> catList = listCompleta.get(catPos);
         switch(op) {
             case 1 -> {
+                System.out.println("\nNOV"+ art.toUpperCase() + " " + cat);
 
+                System.out.print("Insira o nome d"+art+" "+cat.toLowerCase()+": ");
+                input.nextLine();
+                String nome = input.nextLine();
+
+                System.out.print("Insira o preço d"+art+" "+cat.toLowerCase()+": ");
+                Double preco = input.nextDouble();
+
+                Produto novoProd = new Produto(cat, nome, preco);
+                ProdutoManager.createProduto(catPos, novoProd);
+
+                System.out.println("Salvo com sucesso!");
+                Thread.sleep(750);
+
+                retorno = 1;
             }
             case 2 -> {
-
+                System.out.print("\n"+ cat + "S");
+                Menus.printProdutosCategoria(catPos, catList, false);
+                Thread.sleep(1250);
+                retorno = 1;
             }
             case 3 -> {
+                System.out.println("\nEDITAR "+ cat);
+                Menus.printProdutosCategoria(catPos, catList, false);
 
+                int idx;
+                do {
+                    System.out.println("\nInsira o índice d"+ art + " "+ cat.toLowerCase()+ " que deseja editar: ");
+                    idx = input.nextInt();
+                    if (idx < 1 || idx > catList.size()) {
+                        System.out.println(invalidOptionMessage);
+                    }
+                } while (idx < 1 || idx > catList.size());
+
+                System.out.println("Insira o novo nome d"+art+" "+cat.toLowerCase()+": ");
+                input.nextLine();
+                String nome = input.nextLine();
+
+                System.out.println("Insira o novo preço d"+art+" "+cat.toLowerCase()+": ");
+                Double preco = input.nextDouble();
+
+                Produto updatedProd = new Produto(cat, nome, preco);
+                ProdutoManager.updateProduto(catPos, idx - 1, updatedProd);
+                System.out.println("Editado com sucesso!");
+                Thread.sleep(750);
+
+                retorno = 1;
             }
             case 4 -> {
+                System.out.println("\nDELETAR "+ cat);
+                Menus.printProdutosCategoria(catPos, catList, false);
 
+                int idx;
+                do {
+                    System.out.println("\nInsira o índice d"+ art + " "+ cat.toLowerCase()+ " que deseja deletar: ");
+                    idx = input.nextInt();
+                    if (idx < 1 || idx > catList.size()) {
+                        System.out.println(invalidOptionMessage);
+                    }
+                } while (idx < 1 || idx > catList.size());
+                ProdutoManager.deleteProduto(catPos, idx - 1);
+                System.out.println("Deletado com sucesso!");
+                Thread.sleep(750);
+
+                retorno = 1;
             }
             case 5 -> {
+                System.out.println("Retornando ao menu inicial...");
+                retorno = 2;
+            }
+            case 6 -> {
                 System.out.println("Encerrando...");
                 System.exit(99);
             }
@@ -268,7 +332,7 @@ public class Main {
         listCompleta.set(catPos, ProdutoManager.readProdutos(catPos));
         List<Produto> catList = listCompleta.get(catPos);
         do {
-            Menus.printProdutosCategoria(catPos, catList);
+            Menus.printProdutosCategoria(catPos, catList, true);
             pick = Main.input.nextInt();
 
             if (pick < 1 || pick > catList.size() + 1) {

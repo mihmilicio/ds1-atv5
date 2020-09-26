@@ -31,7 +31,7 @@ public class ProdutoManager {
         while (leitor.hasNextLine()) {
             String[] conteudo = leitor.nextLine().split(separadores[catPos]);
             if (conteudo.length > 1) {
-                produtoList.add(new Produto(categoria, conteudo[nomeCol[catPos]], conteudo[precoCol[catPos]]));
+                produtoList.add(new Produto(categoria, conteudo[nomeCol[catPos]], Double.parseDouble(conteudo[precoCol[catPos]].replace(",", "."))));
             }
         }
         leitor.close();

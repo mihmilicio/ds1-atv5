@@ -1,7 +1,6 @@
 package com.company;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -102,19 +101,21 @@ public class Menus {
 
     }
 
-    public static void printProdutosCategoria(int catPos, List<Produto> produtoList) {
-        String banner;
-        if (catPos == 0) {
-            banner = "|           SOFT DRINKS           |";
-        } else if (catPos == 1) {
-            banner = "|              VINHOS             |";
-        } else {
-            banner = "|              PRATOS             |";
+    public static void printProdutosCategoria(int catPos, List<Produto> produtoList, boolean showExtras) {
+        if (showExtras) {
+            String banner;
+            if (catPos == 0) {
+                banner = "|           SOFT DRINKS           |";
+            } else if (catPos == 1) {
+                banner = "|              VINHOS             |";
+            } else {
+                banner = "|              PRATOS             |";
+            }
+            System.out.println("  _______________________________ ");
+            System.out.println(" /                               \\");
+            System.out.println(banner);
+            System.out.println(" \\_______________________________/");
         }
-        System.out.println("  _______________________________ ");
-        System.out.println(" /                               \\");
-        System.out.println(banner);
-        System.out.println(" \\_______________________________/");
         System.out.println();
 
         int listSize = produtoList.size();
@@ -122,7 +123,9 @@ public class Menus {
             Produto produto = produtoList.get(index);
             System.out.println("["+ (index + 1) +"] - " + produto.nome + "\t\t( R$ " + Main.formatter.format(produto.preco) + " )");
         });
-        System.out.println("["+ (listSize + 1) +"] - Voltar ao menu principal");
+        if (showExtras) {
+            System.out.println("[" + (listSize + 1) + "] - Voltar ao menu principal");
+        }
     }
 
     public static void printEnviarPedido (String tipo) {
@@ -174,10 +177,11 @@ public class Menus {
         System.out.println("[2] - Consultar "+ cat.toLowerCase() +"s registrad"+art+"s");
         System.out.println("[3] - Modificar "+ cat.toLowerCase());
         System.out.println("[4] - Deletar "+ cat.toLowerCase());
-        System.out.println("[5] - Encerrar :(");
+        System.out.println("[5] - Voltar");
+        System.out.println("[6] - Encerrar :(");
     }
 
-    public static int menuCategoria (int catPos) {
+    public static int menuCategoria (int catPos) throws IOException, InterruptedException {
         int op;
         int retorno = 0;
         do {
@@ -185,12 +189,12 @@ public class Menus {
 
             op = Main.input.nextInt();
 
-            if (op < 1 || op > 5) {
+            if (op < 1 || op > 6) {
                 System.out.println(invalidOptionMessage);
             } else {
                 retorno = Main.getOptionCategoria(op, catPos);
             }
-        } while (op > 5 || op < 1 || retorno == 1);
+        } while (op > 6 || op < 1 || retorno == 1);
 
         return retorno;
     }
